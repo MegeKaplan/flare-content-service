@@ -1,11 +1,25 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import * as postsService from '../services/posts.service.js'
 import { generateErrorResponse } from '../utils/error.js'
+import { CreatePostRequest, CreatePostResponse } from '../dtos/create-post.dto.js'
+import { validateBody } from '../utils/validate.js'
+import { GetPostResponse } from '../dtos/get-post.dto.js'
 
 export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
   try {
     const posts = await postsService.getPosts()
-    reply.send(posts)
+
+    const response: GetPostResponse[] = posts.map(post => {
+      return {
+        id: post._id,
+        content: post.content,
+        creatorId: post.creatorId,
+        createdAt: post.createdAt,
+        mediaIds: post.mediaIds,
+      }
+    })
+
+    reply.code(200).send(response)
   } catch (error) {
     reply.code(500).send(generateErrorResponse(error as Error))
   }
@@ -13,9 +27,25 @@ export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
 
 export async function createPost(request: FastifyRequest, reply: FastifyReply) {
   try {
-    const postData = request.body
-    const createdPost = await postsService.createPost(postData)
-    reply.code(201).send(createdPost)
+    const body = request.body as CreatePostRequest
+    const creatorId = request.headers['x-user-id'] as string
+
+    const isValid = validateBody(CreatePostRequest, { ...body, creatorId })
+    if (!isValid) {
+      return reply.code(400).send(generateErrorResponse(new Error('Invalid request body or headers')))
+    }
+
+    const createdPost = await postsService.createPost({ ...body, creatorId })
+
+    const response: CreatePostResponse = {
+      id: createdPost._id,
+      content: createdPost.content,
+      creatorId: createdPost.creatorId,
+      createdAt: createdPost.createdAt,
+      mediaIds: createdPost.mediaIds,
+    }
+
+    reply.code(201).send(response)
   } catch (error) {
     reply.code(500).send(generateErrorResponse(error as Error))
   }
