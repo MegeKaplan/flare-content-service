@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 export const Post = z.object({
-  _id: z.uuid(),
+  id: z.uuid(),
   content: z.string().optional(),
   creatorId: z.uuid(),
   mediaIds: z.array(z.string()).optional(), // mediaIds are nanoid strings
-  createdAt: z.date().optional().default(() => new Date()),
+  createdAt: z.date(),
   updatedAt: z.date().optional(),
   deletedAt: z.date().optional(),
 })

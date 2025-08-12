@@ -12,7 +12,7 @@ export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
 
     const response: GetPostResponse[] = posts.map(post => {
       return {
-        id: post._id,
+        id: post.id,
         content: post.content,
         creatorId: post.creatorId,
         createdAt: post.createdAt,
@@ -36,7 +36,7 @@ export async function getPostById(request: FastifyRequest, reply: FastifyReply) 
     }
 
     const response: GetPostResponse = {
-      id: post._id,
+      id: post.id,
       content: post.content,
       creatorId: post.creatorId,
       createdAt: post.createdAt,
@@ -62,7 +62,7 @@ export async function createPost(request: FastifyRequest, reply: FastifyReply) {
     const createdPost = await postsService.createPost({ ...body, creatorId })
 
     const response: CreatePostResponse = {
-      id: createdPost._id,
+      id: createdPost.id,
       content: createdPost.content,
       creatorId: createdPost.creatorId,
       createdAt: createdPost.createdAt,

@@ -8,7 +8,7 @@ export const CreatePostRequest = z.object({
 
 export const CreatePostResponse = z.object({
   id: z.uuid(),
-  content: z.string(),
+  content: z.string().optional(),
   creatorId: z.uuid(),
   createdAt: z.date(),
   mediaIds: z.array(z.string()).optional(),

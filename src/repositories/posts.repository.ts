@@ -1,16 +1,20 @@
 import { UUIDTypes } from "uuid"
+import { getDb } from "../database/mongo.js"
+import { Post } from "../models/post.model.js"
 
-const posts: any[] = []
+function postsCollection() {
+  return getDb().collection('posts')
+}
 
 export const getPosts = async () => {
-  return posts
+  return postsCollection()?.find().toArray()
 }
 
 export const findPostById = async (id: UUIDTypes) => {
-  return posts.find(post => post._id === id)
+  return postsCollection()?.findOne({ id })
 }
 
-export const createPost = async (postData: any) => {
-  posts.push(postData)
+export const createPost = async (postData: Post) => {
+  postsCollection()?.insertOne(postData)
   return postData
 }

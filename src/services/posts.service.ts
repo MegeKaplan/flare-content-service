@@ -15,11 +15,9 @@ export const createPost = async (postData: CreatePostRequest) => {
   const postId = uuidv4()
   
   const newPost: Post = {
-    _id: postId,
+    id: postId,
     ...postData,
     createdAt: new Date(),
-    updatedAt: undefined,
-    deletedAt: undefined,
   }
 
   return await postsRepo.createPost(newPost)
