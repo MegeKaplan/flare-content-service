@@ -11,6 +11,7 @@ export const CreatePostResponse = z.object({
   content: z.string().optional(),
   creatorId: z.uuid(),
   createdAt: z.date(),
+  updatedAt: z.date().optional(),
   mediaIds: z.array(z.string()).optional(),
 })
 

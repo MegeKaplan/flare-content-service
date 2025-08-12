@@ -13,7 +13,7 @@ export const getPostById = async (id: UUIDTypes) => {
 
 export const createPost = async (postData: CreatePostRequest) => {
   const postId = uuidv4()
-  
+
   const newPost: Post = {
     id: postId,
     ...postData,
@@ -21,4 +21,13 @@ export const createPost = async (postData: CreatePostRequest) => {
   }
 
   return await postsRepo.createPost(newPost)
+}
+
+export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>) => {
+  const updatedPost: Partial<Post> = {
+    ...postData,
+    updatedAt: new Date(),
+  }
+
+  return await postsRepo.updatePostById(id, updatedPost)
 }
