@@ -7,11 +7,11 @@ function postsCollection() {
 }
 
 export const getPosts = async () => {
-  return postsCollection()?.find().toArray()
+  return postsCollection()?.find({ deletedAt: { $exists: false } }).toArray()
 }
 
 export const findPostById = async (id: UUIDTypes) => {
-  return postsCollection()?.findOne({ id })
+  return postsCollection()?.findOne({ id, deletedAt: { $exists: false } })
 }
 
 export const createPost = async (postData: Post) => {
@@ -20,6 +20,11 @@ export const createPost = async (postData: Post) => {
 }
 
 export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>) => {
-  await postsCollection()?.updateOne({ id }, { $set: postData })
-  return findPostById(id)
+  const isExists = await findPostById(id)
+  await postsCollection()?.updateOne({ id, deletedAt: { $exists: false } }, { $set: postData })
+  return isExists
+}
+
+export const deletePostById = async (id: UUIDTypes) => {
+  return (await postsCollection()?.deleteOne({ id, deletedAt: { $exists: false } })).deletedCount > 0
 }

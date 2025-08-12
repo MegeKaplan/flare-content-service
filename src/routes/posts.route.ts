@@ -6,6 +6,7 @@ async function postsRoutes(fastify: FastifyInstance) {
   fastify.get('/:id', postsController.getPostById)
   fastify.post('/', postsController.createPost)
   fastify.put('/:id', postsController.updatePostById)
+  fastify.delete('/:id', postsController.deletePostById)
 }
 
 export default postsRoutes

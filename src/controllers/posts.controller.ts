@@ -109,3 +109,18 @@ export const updatePostById = async (request: FastifyRequest, reply: FastifyRepl
     reply.code(500).send(generateErrorResponse(error as Error))
   }
 }
+
+export const deletePostById = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const { id } = request.params as { id: UUIDTypes }
+    const result = await postsService.deletePostById(id)
+
+    if (!result) {
+      return reply.code(404).send(generateErrorResponse(new Error('Post not found')))
+    }
+
+    reply.code(204).send()
+  } catch (error) {
+    reply.code(500).send(generateErrorResponse(error as Error))
+  }
+}

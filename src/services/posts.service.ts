@@ -31,3 +31,10 @@ export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>) => 
 
   return await postsRepo.updatePostById(id, updatedPost)
 }
+
+export const deletePostById = async (id: UUIDTypes, hard = false) => {
+  if (hard) {
+    return await postsRepo.deletePostById(id)
+  }
+  return await postsRepo.updatePostById(id, { deletedAt: new Date() })
+}
