@@ -2,7 +2,7 @@ import { UUIDTypes } from "uuid"
 import { getDb } from "../database/mongo.js"
 import { Post } from "../models/post.model.js"
 
-function postsCollection() {
+const postsCollection = () => {
   return getDb().collection('posts')
 }
 

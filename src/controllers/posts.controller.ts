@@ -7,7 +7,7 @@ import { GetPostResponse } from '../dtos/get-post.dto.js'
 import { UUIDTypes } from 'uuid'
 import { UpdatePostRequest, UpdatePostResponse } from '../dtos/update-post.dto.js'
 
-export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
+export const getPosts = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const posts = await postsService.getPosts()
 
@@ -28,7 +28,7 @@ export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
   }
 }
 
-export async function getPostById(request: FastifyRequest, reply: FastifyReply) {
+export const getPostById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: UUIDTypes }
     const post = await postsService.getPostById(id)
@@ -52,7 +52,7 @@ export async function getPostById(request: FastifyRequest, reply: FastifyReply) 
   }
 }
 
-export async function createPost(request: FastifyRequest, reply: FastifyReply) {
+export const createPost = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const body = request.body as CreatePostRequest
     const creatorId = request.headers['x-user-id'] as string
