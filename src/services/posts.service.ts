@@ -1,10 +1,14 @@
 import { CreatePostRequest } from '../dtos/create-post.dto.js'
 import { Post } from '../models/post.model.js'
 import * as postsRepo from '../repositories/posts.repository.js'
-import { v4 as uuidv4 } from 'uuid'
+import { UUIDTypes, v4 as uuidv4 } from 'uuid'
 
 export const getPosts = async () => {
   return await postsRepo.getPosts()
+}
+
+export const getPostById = async (id: UUIDTypes) => {
+  return await postsRepo.findPostById(id)
 }
 
 export const createPost = async (postData: CreatePostRequest) => {

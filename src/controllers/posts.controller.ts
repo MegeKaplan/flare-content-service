@@ -4,6 +4,7 @@ import { generateErrorResponse } from '../utils/error.js'
 import { CreatePostRequest, CreatePostResponse } from '../dtos/create-post.dto.js'
 import { validateBody } from '../utils/validate.js'
 import { GetPostResponse } from '../dtos/get-post.dto.js'
+import { UUIDTypes } from 'uuid'
 
 export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
   try {
@@ -18,6 +19,29 @@ export async function getPosts(request: FastifyRequest, reply: FastifyReply) {
         mediaIds: post.mediaIds,
       }
     })
+
+    reply.code(200).send(response)
+  } catch (error) {
+    reply.code(500).send(generateErrorResponse(error as Error))
+  }
+}
+
+export async function getPostById(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const { id } = request.params as { id: UUIDTypes }
+    const post = await postsService.getPostById(id)
+
+    if (!post) {
+      return reply.code(404).send(generateErrorResponse(new Error('Post not found')))
+    }
+
+    const response: GetPostResponse = {
+      id: post._id,
+      content: post.content,
+      creatorId: post.creatorId,
+      createdAt: post.createdAt,
+      mediaIds: post.mediaIds,
+    }
 
     reply.code(200).send(response)
   } catch (error) {
