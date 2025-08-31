@@ -1,13 +1,28 @@
 import { UUIDTypes } from "uuid"
 import { getDb } from "../database/mongo.js"
 import { Post } from "../models/post.model.js"
+import { sanitizeRegex } from "../utils/sanitize.js"
+import { GetPostsQuery } from "../dtos/get-posts-dto.js"
 
 const postsCollection = () => {
   return getDb().collection('posts')
 }
 
-export const getPosts = async () => {
-  return postsCollection()?.find({ deletedAt: { $exists: false } }).toArray()
+export const getPosts = async (
+  query: GetPostsQuery,
+  options: { skip: number; limit: number; sortBy: string; sortDir: 1 | -1 }
+) => {
+  const mongoQuery: any = { deletedAt: { $exists: false } }
+
+  if (query.creatorId) mongoQuery.creatorId = query.creatorId.toString()
+  if (query.content) mongoQuery.content = { $regex: sanitizeRegex(query.content), $options: 'i' }
+
+  return postsCollection()
+    .find(mongoQuery)
+    .skip(options.skip)
+    .limit(options.limit)
+    .sort({ [options.sortBy]: options.sortDir })
+    .toArray()
 }
 
 export const findPostById = async (id: UUIDTypes) => {

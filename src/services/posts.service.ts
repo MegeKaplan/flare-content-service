@@ -1,10 +1,18 @@
 import { CreatePostRequest } from '../dtos/create-post.dto.js'
+import { GetPostsQuery } from '../dtos/get-posts-dto.js'
 import { Post } from '../models/post.model.js'
 import * as postsRepo from '../repositories/posts.repository.js'
 import { UUIDTypes, v4 as uuidv4 } from 'uuid'
 
-export const getPosts = async () => {
-  return await postsRepo.getPosts()
+export const getPosts = async (query: GetPostsQuery) => {
+  const options = {
+    skip: query.offset ? parseInt(query.offset, 10) : 0,
+    limit: query.limit ? parseInt(query.limit, 10) : 20,
+    sortBy: query.sortBy || 'createdAt',
+    sortDir: (query.sortOrder === 'asc' ? 1 : -1) as 1 | -1
+  }
+
+  return await postsRepo.getPosts(query, options)
 }
 
 export const getPostById = async (id: UUIDTypes) => {

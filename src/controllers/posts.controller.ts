@@ -6,10 +6,11 @@ import { validateBody } from '../utils/validate.js'
 import { GetPostResponse } from '../dtos/get-post.dto.js'
 import { UUIDTypes } from 'uuid'
 import { UpdatePostRequest, UpdatePostResponse } from '../dtos/update-post.dto.js'
+import { GetPostsQuery } from '../dtos/get-posts-dto.js'
 
 export const getPosts = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const posts = await postsService.getPosts()
+    const posts = await postsService.getPosts(request.query as GetPostsQuery)
 
     const response: GetPostResponse[] = posts.map(post => {
       return {
