@@ -84,14 +84,14 @@ export const updatePostById = async (request: FastifyRequest, reply: FastifyRepl
   try {
     const { id } = request.params as { id: UUIDTypes }
     const body = request.body as UpdatePostRequest
-    const creatorId = request.headers['x-user-id'] as string
+    const principalUserId = request.headers['x-user-id'] as string
 
-    const isValid = validateBody(UpdatePostRequest, { ...body, creatorId })
+    const isValid = validateBody(UpdatePostRequest, { ...body, principalUserId })
     if (!isValid) {
       return reply.code(400).send(generateErrorResponse(new Error('Invalid request body or headers')))
     }
 
-    const updatedPost = await postsService.updatePostById(id, { ...body, creatorId })
+    const updatedPost = await postsService.updatePostById(id, { ...body }, principalUserId)
     if (!updatedPost) {
       return reply.code(404).send(generateErrorResponse(new Error('Post not found')))
     }

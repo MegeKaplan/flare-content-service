@@ -31,7 +31,16 @@ export const createPost = async (postData: CreatePostRequest) => {
   return await postsRepo.createPost(newPost)
 }
 
-export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>) => {
+export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>, principalUserId: string) => {
+  const post = await postsRepo.findPostById(id)
+  if (!post) {
+    return null
+  }
+
+  if (post.creatorId !== principalUserId) {
+    throw new Error('You can only update your own posts')
+  }
+
   const updatedPost: Partial<Post> = {
     ...postData,
     updatedAt: new Date(),
