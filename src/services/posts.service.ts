@@ -22,10 +22,14 @@ export const getPostById = async (id: UUIDTypes) => {
 export const createPost = async (postData: CreatePostRequest) => {
   const postId = uuidv4()
 
+  const date = new Date()
+
   const newPost: Post = {
     id: postId,
     ...postData,
-    createdAt: new Date(),
+    type: postData.type || 'post',
+    createdAt: date,
+    expiresAt: postData.type === 'story' ? new Date(postData.expiresAt || date.getTime() + 24 * 60 * 60 * 1000) : postData.expiresAt || undefined,
   }
 
   return await postsRepo.createPost(newPost)
@@ -41,9 +45,12 @@ export const updatePostById = async (id: UUIDTypes, postData: Partial<Post>, pri
     throw new Error('You can only update your own posts')
   }
 
+  const date = new Date()
+
   const updatedPost: Partial<Post> = {
     ...postData,
-    updatedAt: new Date(),
+    updatedAt: date,
+    expiresAt: postData.type === 'story' ? new Date(postData.expiresAt || date.getTime() + 24 * 60 * 60 * 1000) : postData.expiresAt || undefined,
   }
 
   return await postsRepo.updatePostById(id, updatedPost)

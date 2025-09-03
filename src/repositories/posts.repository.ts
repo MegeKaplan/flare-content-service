@@ -16,6 +16,9 @@ export const getPosts = async (
 
   if (query.creatorId) mongoQuery.creatorId = query.creatorId.toString()
   if (query.content) mongoQuery.content = { $regex: sanitizeRegex(query.content), $options: 'i' }
+  if (query.type) mongoQuery.type = query.type.toString()
+  if (query.active === "true") mongoQuery.expiresAt = { $gt: new Date() } // greater than now
+  if (query.active === "false") mongoQuery.expiresAt = { $lt: new Date() } // less than now
 
   return postsCollection()
     .find(mongoQuery)

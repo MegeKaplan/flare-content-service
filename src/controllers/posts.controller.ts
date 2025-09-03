@@ -17,9 +17,11 @@ export const getPosts = async (request: FastifyRequest, reply: FastifyReply) => 
         id: post.id,
         content: post.content,
         creatorId: post.creatorId,
-        createdAt: post.createdAt,
         mediaIds: post.mediaIds,
+        type: post.type,
+        createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        expiresAt: post.expiresAt,
       }
     })
 
@@ -42,9 +44,11 @@ export const getPostById = async (request: FastifyRequest, reply: FastifyReply) 
       id: post.id,
       content: post.content,
       creatorId: post.creatorId,
-      createdAt: post.createdAt,
       mediaIds: post.mediaIds,
+      type: post.type,
+      createdAt: post.createdAt,
       updatedAt: post.updatedAt,
+      expiresAt: post.expiresAt,
     }
 
     reply.code(200).send(response)
@@ -69,9 +73,11 @@ export const createPost = async (request: FastifyRequest, reply: FastifyReply) =
       id: createdPost.id,
       content: createdPost.content,
       creatorId: createdPost.creatorId,
-      createdAt: createdPost.createdAt,
       mediaIds: createdPost.mediaIds,
+      type: createdPost.type,
+      createdAt: createdPost.createdAt,
       updatedAt: createdPost.updatedAt,
+      expiresAt: createdPost.expiresAt,
     }
 
     reply.code(201).send(response)
@@ -100,9 +106,11 @@ export const updatePostById = async (request: FastifyRequest, reply: FastifyRepl
       id: updatedPost.id,
       content: updatedPost.content,
       creatorId: updatedPost.creatorId,
-      createdAt: updatedPost.createdAt,
       mediaIds: updatedPost.mediaIds,
+      type: updatedPost.type,
+      createdAt: updatedPost.createdAt,
       updatedAt: updatedPost.updatedAt,
+      expiresAt: updatedPost.expiresAt,
     }
 
     reply.code(200).send(response)
