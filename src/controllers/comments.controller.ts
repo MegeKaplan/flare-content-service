@@ -5,6 +5,29 @@ import { validateBody } from '../utils/validate.js'
 import { UUIDTypes } from 'uuid'
 import { GetCommentResponse } from '../dtos/get-comment.dto.js'
 import { CreateCommentRequest, CreateCommentResponse } from '../dtos/create-comment.dto.js'
+import { GetCommentsQuery } from '../dtos/get-comments.dto.js'
+
+export const getComments = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const comments = await commentsService.getComments(request.query as GetCommentsQuery)
+
+    const response: GetCommentResponse[] = comments.map(comment => {
+      return {
+        id: comment.id,
+        content: comment.content,
+        creatorId: comment.creatorId,
+        targetType: comment.targetType,
+        targetId: comment.targetId,
+        createdAt: comment.createdAt,
+        updatedAt: comment.updatedAt,
+      }
+    })
+
+    reply.code(200).send(response)
+  } catch (error) {
+    reply.code(500).send(generateErrorResponse(error as Error))
+  }
+}
 
 export const getCommentById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
